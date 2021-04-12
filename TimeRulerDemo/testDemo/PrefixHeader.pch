@@ -1,0 +1,166 @@
+//
+//  PrefixHeader.pch
+//  testDemo
+//
+//  Created by Albatross on 2021/3/20.
+//
+
+#ifndef PrefixHeader_pch
+#define PrefixHeader_pch
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+
+
+// Headers
+#import "UIView+TAExtension.h"
+#import "TimeTool.h"
+#import "BDRulerScrollView.h"
+#import "HKTimeRulerView.h"
+#import "EZDeviceRecordFile.h"
+
+
+// Micro
+//------------------------------------Simulator/Device
+//区分模拟器和真机
+#if TARGET_OS_IPHONE
+//iPhone Device
+#endif
+
+#if TARGET_IPHONE_SIMULATOR
+//iPhone Simulator
+#endif
+
+//------------------------------------ARC/no RAC
+//ARC
+#if __has_feature(objc_arc)
+//compiling with ARC
+#else
+//compiling without ARC
+#endif
+
+
+//单例
+#define WeakSelf __weak typeof(self)weakSelf = self;
+
+
+// 设备屏幕尺寸
+// 导航栏/tabbar高度
+// 判断是否是ipad
+#define isPad ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
+// 判断iPhone4系列
+#define kiPhone4 ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(640, 960), [[UIScreen mainScreen] currentMode].size) && !isPad : NO)
+// 判断iPhone5系列
+#define kiPhone5 ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(640, 1136), [[UIScreen mainScreen] currentMode].size) && !isPad : NO)
+// 判断iPhone6系列
+#define kiPhone6 ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(750, 1334), [[UIScreen mainScreen] currentMode].size) && !isPad : NO)
+//判断iphone6+系列
+#define kiPhone6Plus ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(1242, 2208), [[UIScreen mainScreen] currentMode].size) && !isPad : NO)
+// 判断iPhoneX
+#define IS_IPHONE_X ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(1125, 2436), [[UIScreen mainScreen] currentMode].size) && !isPad : NO)
+// 判断iPHoneXr
+#define IS_IPHONE_Xr ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(828, 1792), [[UIScreen mainScreen] currentMode].size) && !isPad : NO)
+// 判断iPhoneXs
+#define IS_IPHONE_Xs ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(1125, 2436), [[UIScreen mainScreen] currentMode].size) && !isPad : NO)
+// 判断iPhoneXs Max
+#define IS_IPHONE_Xs_Max ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(1242, 2688), [[UIScreen mainScreen] currentMode].size) && !isPad : NO)
+
+#define StatusBar_Height ((IS_IPHONE_X == YES || IS_IPHONE_Xr == YES || IS_IPHONE_Xs == YES || IS_IPHONE_Xs_Max == YES) ? 44.0 : 20.0)
+#define NavBar_Height ((IS_IPHONE_X == YES || IS_IPHONE_Xr == YES || IS_IPHONE_Xs == YES || IS_IPHONE_Xs_Max == YES) ? 88.0 : 64.0)
+#define TabBar_Height ((IS_IPHONE_X == YES || IS_IPHONE_Xr == YES || IS_IPHONE_Xs == YES || IS_IPHONE_Xs_Max == YES) ? 83.0 : 49.0)
+
+
+#define is_iPhoneXSerious @available(iOS 11.0, *) && UIApplication.sharedApplication.keyWindow.safeAreaInsets.bottom > 0.0
+
+#define Screen_height [UIScreen mainScreen].bounds.size.height
+#define Screen_width [UIScreen mainScreen].bounds.size.width
+#define Screen_CornerRadius is_iPhoneXSerious ? 34 : 0
+
+//System
+#define PasteString(string)   [[UIPasteboard generalPasteboard] setString:string];
+#define PasteImage(image)     [[UIPasteboard generalPasteboard] setImage:image];
+
+//URL
+#define URL_str(url) [NSURL URLWithString:url]
+
+//Image
+//图片加载
+#define imageByPath(imageName) [[NSBundle mainBundle] pathForResource:imageName ofType:@"png"]
+#define imageByFile(imageStr) [[UIImage alloc] initWithContentsOfFile:path(imageStr)]
+#define imageByName(imageName) [UIImage imageNamed:imageName]
+#define imageByUrl(urlStr) [UIImage imageWithData: [NSData dataWithContentsOfURL:[NSURL URLWithString:urlStr]]]
+//可拉伸的图片
+
+#define ResizableImage(name,top,left,bottom,right) [[UIImage imageNamed:name] resizableImageWithCapInsets:UIEdgeInsetsMake(top,left,bottom,right)]
+#define ResizableImageWithMode(name,top,left,bottom,right,mode) [[UIImage imageNamed:name] resizableImageWithCapInsets:UIEdgeInsetsMake(top,left,bottom,right) resizingMode:mode]
+
+//file
+//读取文件的文本内容,默认编码为UTF-8
+#define FileString(name,ext)            [[NSString alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:(name) ofType:(ext)] encoding:NSUTF8StringEncoding error:nil]
+#define FileDictionary(name,ext)        [[NSDictionary alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:(name) ofType:(ext)]]
+#define FileArray(name,ext)             [[NSArray alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:(name) ofType:(ext)]]
+
+
+//数学
+#define PI 3.14159265358
+
+
+//字体
+#define FONT(a) [UIFont systemFontOfSize:a]
+
+
+//输出frame(frame是结构体，没法%@)
+#define LOGFRAME(f) NSLog(@"\nx:%f\ny:%f\nwidth:%f\nheight:%f\n",f.origin.x,f.origin.y,f.size.width,f.size.height)
+#define LOGBOOL(b)  NSLog(@"%@",b?@"YES":@"NO");
+#define LOGSize(size) NSLog(@"%s w:%.4f, h:%.4f", #size, size.width, size.height)
+#define LOGPoint(point) NSLog(@"%s x:%.4f, y:%.4f", #point, point.x, point.y)
+
+//弹出提示
+#define ShowAlert(TITLE,MESSAGE,QUVC) UIAlertController *alertController = [UIAlertController alertControllerWithTitle:TITLE message:MESSAGE preferredStyle:UIAlertControllerStyleAlert];[alertController addAction:[UIAlertAction actionWithTitle:@"确定"style:UIAlertActionStyleDefault handler:nil]];[QUVC presentViewController:alertController animated:YES completion:nil];
+
+//App
+#define kApp ((AppDelegate *)[UIApplication sharedApplication].delegate)
+#define kNav ((AppDelegate *)[UIApplication sharedApplication].delegate.navigationController)
+#define WINDOW ((UIWindow* )[UIApplication sharedApplication].delegate.window)
+#define IOS_VERSION [[[UIDevice currentDevice] systemVersion] floatValue]
+
+//颜色
+#define RGB(r, g, b)             [UIColor colorWithRed:((r) / 255.0) green:((g) / 255.0) blue:((b) / 255.0) alpha:1.0]
+#define RGBA(r, g, b, a)     [UIColor colorWithRed:((r) / 255.0) green:((g) / 255.0) blue:((b) / 255.0) alpha:(a)]
+
+#define RANDOM_COLOR [UIColor colorWithRed:arc4random()%255/255.0 green:arc4random()%255/255.0 blue:arc4random()%255/255.0 alpha:1]
+
+//转换string
+#define obj2Str(obj) [NSString stringWithFormat:@"%@",obj]
+#define I2S(number) [NSString stringWithFormat:@"%d",number]
+#define F2S(number) [NSString stringWithFormat:@"%f",number]
+
+
+//*********************************************
+
+
+//GCD
+#define BACK(block) dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), block)
+#define MAIN(block) dispatch_async(dispatch_get_main_queue(),block)
+
+
+//Device
+#define isIOS4 ([[[UIDevice currentDevice] systemVersion] intValue]==4)
+#define isIOS5 ([[[UIDevice currentDevice] systemVersion] intValue]==5)
+#define isIOS6 ([[[UIDevice currentDevice] systemVersion] intValue]==6)
+#define isAfterIOS4 ([[[UIDevice currentDevice] systemVersion] intValue]>4)
+#define isAfterIOS5 ([[[UIDevice currentDevice] systemVersion] intValue]>5)
+#define isAfterIOS6 ([[[UIDevice currentDevice] systemVersion] intValue]>6)
+#define IS_IPHONE_5_SCREEN [[UIScreen mainScreen] bounds].size.height >= 480 && [[UIScreen mainScreen] bounds].size.height < 568
+
+#define iOS_version ([[[UIDevice currentDevice] systemVersion] floatValue])
+
+#define isRetina ([[UIScreen mainScreen] scale]==2)
+#define iPhone5 ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(640, 1136), [[UIScreen mainScreen] currentMode].size) : NO)
+
+
+//打开URL
+#define canOpenURL(appScheme) ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:appScheme]])
+#define openURL(appScheme) ([[UIApplication sharedApplication] openURL:[NSURL URLWithString:appScheme]])
+
+#endif /* PrefixHeader_pch */
